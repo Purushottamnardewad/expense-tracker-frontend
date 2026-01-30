@@ -19,7 +19,7 @@
     <h3>Add New Expense</h3>
     <form id="expenseForm">
       <input type="text" id="category" placeholder="Category" required />
-      <input type="number" id="amount" placeholder="Amount" required />
+      <input type="number" id="amount" placeholder="Amount" step="0.01" min="0.01" required />
       <input type="text" id="comment" placeholder="Comment (optional)" />
       <button type="submit" class="primary-btn">Add Expense</button>
     </form>
@@ -37,7 +37,9 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="expenseTable"></tbody>
+      <tbody id="expenseTable">
+        <tr><td colspan="5">Loading...</td></tr>
+      </tbody>
     </table>
   </div>
 
@@ -47,31 +49,37 @@
   </div>
 
   <script src="js/api.js"></script>
-  <script src="js/expenses.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/expenses.js"></script>
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check for valid token
+      const token = localStorage.getItem('token');
+      if (!token || token === 'undefined' || token === 'null') {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+        return;
+      }
 
-    //redirect if not logged in
-    if (!localStorage.getItem('token')) {
-      window.location.href = 'login.html';
-    }
+      document.getElementById('logoutBtn').onclick = () => {
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+      };
 
-    document.getElementById('logoutBtn').onclick = () => {
-      localStorage.removeItem('token');
-      window.location.href = 'login.html';
-    };
+      document.getElementById('expenseForm').addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    document.getElementById('expenseForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      addExpense(
-        document.getElementById('category').value,
-        document.getElementById('amount').value,
-        document.getElementById('comment').value
-      );
-      e.target.reset();
+        addExpense(
+          document.getElementById('category').value,
+          document.getElementById('amount').value,
+          document.getElementById('comment').value
+        );
+
+        e.target.reset();
+      });
+
+      fetchExpenses();
     });
-
-    fetchExpenses();
   </script>
 
 </body>
