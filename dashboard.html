@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <h2>Expense Dashboard</h2>
+
+  <button id="logoutBtn">Logout</button>
+
+  <h3>Add Expense</h3>
+  <form id="expenseForm">
+    <input type="text" id="category" placeholder="Category" required />
+    <input type="number" id="amount" placeholder="Amount" required />
+    <input type="text" id="comment" placeholder="Comment (optional)" />
+    <button type="submit">Add</button>
+  </form>
+
+  <h3>Your Expenses</h3>
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Amount</th>
+        <th>Comment</th>
+        <th>Created</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="expenseTable"></tbody>
+  </table>
+
+  <script src="js/api.js"></script>
+  <script src="js/expenses.js"></script>
+  <script>
+    // Redirect if not logged in
+    if (!localStorage.getItem('token')) {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('logoutBtn').onclick = () => {
+      localStorage.removeItem('token');
+      window.location.href = 'login.html';
+    };
+
+    document.getElementById('expenseForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      addExpense(
+        document.getElementById('category').value,
+        document.getElementById('amount').value,
+        document.getElementById('comment').value
+      );
+      e.target.reset();
+    });
+
+    fetchExpenses();
+  </script>
+</body>
+</html>

@@ -1,3 +1,24 @@
+const renderExpenses = (expenses) => {
+  const table = document.getElementById('expenseTable');
+  table.innerHTML = '';
+
+  expenses.forEach((exp) => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+      <td>${exp.category}</td>
+      <td>${exp.amount}</td>
+      <td>${exp.comment || ''}</td>
+      <td>${new Date(exp.createdAt).toLocaleDateString()}</td>
+      <td>
+        <button onclick="deleteExpense('${exp._id}')">Delete</button>
+      </td>
+    `;
+
+    table.appendChild(row);
+  });
+};
+
 const fetchExpenses = async () => {
   const res = await fetch(`${API_BASE_URL}/expenses`, {
     headers: getAuthHeaders(),
