@@ -124,3 +124,15 @@ th, td {
   text-align: center;
   margin-top: 15px;
 }
+
+/* Pie chart size */
+.chart-container {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto; 
+}
+
+#expenseChart {
+  width: 100% !important;
+  height: 100% !important;
+}
